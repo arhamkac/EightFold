@@ -1,0 +1,20 @@
+{
+  "score": 82,
+  "label": "Strong Match",
+  "skills": {
+    "verified": ["Python", "React", "REST APIs", "Git", "SQL"],
+    "learnable": ["Docker", "TypeScript", "CI/CD"],
+    "missing": ["Kubernetes", "Go"]
+  },
+  "github": {
+    "repos": 5,
+    "languages": ["Python", "React", "JavaScript"],
+    "summary": "5 repos · Python, React, JavaScript"
+  },
+  "codeforces": {
+    "rating": 1450,
+    "rank": "Specialist"
+  },
+  "learningPrediction": "Estimated time to become job-ready: 2–4 weeks",
+  "aiInsight": "The candidate demonstrates strong proficiency in Python and React, directly aligning with the core stack. Competitive programming rating of 1450 signals solid algorithmic thinking. Minor gaps in DevOps tooling (Docker, Kubernetes) are bridgeable within weeks given the candidate's learning trajectory."
+}
