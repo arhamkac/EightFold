@@ -21,33 +21,54 @@ export async function analyzeWithGemini({ githubData, cfData, jobDescription }) 
 }
 
 function buildPrompt(githubData, cfData, jobDescription) {
-
   return `
-You are an AI hiring assistant. Analyze this candidate's data against the job description and return a JSON object.
+You are an expert technical hiring assistant. Perform a deep analysis of this candidate against the job description.
 
-## Candidate Data
-- GitHub: ${githubData.repos} public repos, languages: ${githubData.languages.join(", ")}
-- GitHub bio: ${githubData.bio || "N/A"}
-- Top repos: ${githubData.topRepos.map(r => `${r.name}(${r.lang}, ⭐${r.stars})`).join(", ")}
-- Codeforces rating: ${cfData.rating} (max: ${cfData.maxRating}), rank: ${cfData.rank}
-- Problems solved (last 100 submissions): ${cfData.solvedCount}
-- Strong problem topics: ${cfData.topTags.join(", ")}
+## Candidate GitHub Profile
+- Public repos: ${githubData.repos}
+- Account age: ${githubData.accountAgeDays} days
+- Total stars earned: ${githubData.totalStars}
+- Total forks: ${githubData.totalForks}
+- Followers: ${githubData.followers}
+- Languages (by repo count): ${githubData.languageData.map(l => `${l.lang}(${l.count})`).join(", ")}
+- Bio: ${githubData.bio || "N/A"}
+- Top repos: ${githubData.topRepos.map(r => `${r.name}[${r.lang}, ⭐${r.stars}, 🍴${r.forks}]: ${r.description}`).join(" | ")}
+
+## Candidate Codeforces Profile
+- Current rating: ${cfData.rating} (max: ${cfData.maxRating})
+- Rank: ${cfData.rank} (max: ${cfData.maxRank})
+- Problems solved: ${cfData.solvedCount}
+- Total submissions: ${cfData.totalSubmissions}
+- Acceptance rate: ${cfData.acceptanceRate}%
+- Top problem tags: ${cfData.tagData.map(t => `${t.tag}(${t.count})`).join(", ")}
+- Contribution: ${cfData.contribution}
 
 ## Job Description
 ${jobDescription}
 
 ## Instructions
-Return ONLY a valid JSON object (no markdown, no explanation) with this exact shape:
+Extract every distinct skill/technology/requirement from the job description. For each one, compute a cosine similarity score (0.0–1.0) representing how strongly the candidate's evidence matches that requirement.
+
+Return ONLY a valid JSON object with this exact shape:
 {
-  "score": <number 0-100>,
+  "score": <overall 0-100>,
   "label": <"Strong Match" | "Good Match" | "Partial Match" | "Weak Match">,
-  "skills": {
-    "verified": [<skills the candidate clearly has>],
-    "learnable": [<skills they can pick up quickly given their background>],
-    "missing": [<skills they lack with no evidence of proximity>]
+  "skillSimilarity": [
+    { "skill": "<skill name>", "score": <0.0-1.0>, "status": <"verified"|"learnable"|"missing">, "evidence": "<one line of evidence from their profile>" }
+  ],
+  "dimensions": {
+    "githubActivity": { "score": <0-100>, "summary": "<one line>" },
+    "dsaStrength": { "score": <0-100>, "summary": "<one line>" },
+    "stackFit": { "score": <0-100>, "summary": "<one line>" },
+    "projectDepth": { "score": <0-100>, "summary": "<one line>" },
+    "experienceProxy": { "score": <0-100>, "summary": "<one line>" }
   },
+  "strengths": ["<strength 1>", "<strength 2>", "<strength 3>"],
+  "weaknesses": ["<weakness 1>", "<weakness 2>"],
+  "redFlags": ["<red flag if any, else empty array>"],
+  "hiringRecommendation": <"Strong Hire" | "Hire" | "Maybe" | "No Hire">,
   "learningPrediction": "<e.g. Estimated time to become job-ready: 2–4 weeks>",
-  "aiInsight": "<2-3 sentence explanation of why the candidate matches or doesn't>"
+  "aiInsight": "<3-4 sentence detailed explanation covering strengths, gaps, and hiring rationale>"
 }
 `;
 }

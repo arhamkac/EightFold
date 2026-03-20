@@ -1,20 +1,96 @@
 {
-  "score": 82,
-  "label": "Strong Match",
-  "skills": {
-    "verified": ["Python", "React", "REST APIs", "Git", "SQL"],
-    "learnable": ["Docker", "TypeScript", "CI/CD"],
-    "missing": ["Kubernetes", "Go"]
+  "score": 78,
+  "label": "Good Match",
+  "skillSimilarity": [
+    { "skill": "JavaScript", "score": 0.91, "status": "verified", "evidence": "JavaScript appears in 8 repos, primary language across projects" },
+    { "skill": "React.js", "score": 0.88, "status": "verified", "evidence": "React used in 4 repos including starred frontend projects" },
+    { "skill": "Node.js / Express.js", "score": 0.72, "status": "verified", "evidence": "Node.js present in 3 repos with REST API patterns" },
+    { "skill": "REST APIs", "score": 0.85, "status": "verified", "evidence": "Multiple repos show API integration and backend routes" },
+    { "skill": "MongoDB", "score": 0.60, "status": "learnable", "evidence": "No direct MongoDB repos but strong JS/Node background suggests quick pickup" },
+    { "skill": "PostgreSQL", "score": 0.45, "status": "learnable", "evidence": "SQL knowledge inferred from problem-solving; no direct project evidence" },
+    { "skill": "Data Structures & Algorithms", "score": 0.82, "status": "verified", "evidence": "CF rating 1450, 60+ problems solved, strong in dp and graphs" },
+    { "skill": "Docker", "score": 0.20, "status": "missing", "evidence": "No Dockerfile or containerization evidence in any repo" },
+    { "skill": "AWS / Cloud", "score": 0.15, "status": "missing", "evidence": "No cloud deployment configs found in repositories" },
+    { "skill": "Git & GitHub", "score": 0.95, "status": "verified", "evidence": "Active GitHub profile with consistent commit history" },
+    { "skill": "System Design", "score": 0.35, "status": "learnable", "evidence": "No explicit system design projects but architectural patterns visible" },
+    { "skill": "Communication & Teamwork", "score": 0.55, "status": "learnable", "evidence": "Some open source contributions and repo documentation present" }
+  ],
+  "dimensions": {
+    "githubActivity": { "score": 74, "summary": "Consistent activity across 12 repos with 38 total stars" },
+    "dsaStrength": { "score": 82, "summary": "CF rating 1450 (Specialist), strong in dp, greedy, graphs" },
+    "stackFit": { "score": 85, "summary": "React + Node.js stack directly matches job requirements" },
+    "projectDepth": { "score": 65, "summary": "Projects show breadth but limited production-scale depth" },
+    "experienceProxy": { "score": 70, "summary": "2+ year account age, steady growth trajectory visible" }
   },
+  "strengths": [
+    "Strong React and JavaScript fundamentals directly matching the core stack",
+    "Solid DSA foundation from competitive programming (CF 1450)",
+    "Active GitHub presence with real project evidence"
+  ],
+  "weaknesses": [
+    "No Docker or containerization experience found",
+    "Database experience (MongoDB/PostgreSQL) not directly evidenced in projects"
+  ],
+  "redFlags": [],
+  "hiringRecommendation": "Hire",
+  "learningPrediction": "Estimated time to become fully job-ready: 3–5 weeks (primarily Docker + DB gaps)",
+  "aiInsight": "The candidate shows strong alignment with the core full-stack requirements — React and Node.js are well-evidenced across multiple projects, and a Codeforces rating of 1450 confirms solid algorithmic thinking. The main gaps are in DevOps tooling (Docker) and direct database project experience, neither of which is a blocker given the candidate's learning trajectory. Project depth is moderate — repos show working knowledge but lack production-scale complexity. Overall a solid hire for a junior-to-mid full-stack role with a short onboarding ramp.",
   "github": {
-    "repos": 5,
-    "languages": ["Python", "React", "JavaScript"],
-    "summary": "5 repos · Python, React, JavaScript"
+    "repos": 12,
+    "followers": 8,
+    "following": 15,
+    "accountAgeDays": 820,
+    "languages": ["JavaScript", "Python", "TypeScript", "HTML", "CSS"],
+    "languageData": [
+      { "lang": "JavaScript", "count": 8 },
+      { "lang": "Python", "count": 3 },
+      { "lang": "TypeScript", "count": 2 },
+      { "lang": "HTML", "count": 2 },
+      { "lang": "CSS", "count": 1 }
+    ],
+    "totalStars": 38,
+    "totalForks": 12,
+    "summary": "12 repos · JavaScript, Python, TypeScript",
+    "bio": "Full-stack developer | Open source enthusiast",
+    "topRepos": [
+      { "name": "portfolio-site", "stars": 14, "forks": 3, "lang": "JavaScript", "description": "Personal portfolio built with React", "url": "#", "updatedAt": "2024-11-01" },
+      { "name": "task-manager-api", "stars": 10, "forks": 5, "lang": "JavaScript", "description": "REST API with Node.js and Express", "url": "#", "updatedAt": "2024-10-15" },
+      { "name": "algo-solutions", "stars": 8, "forks": 2, "lang": "Python", "description": "Competitive programming solutions", "url": "#", "updatedAt": "2024-09-20" },
+      { "name": "chat-app", "stars": 6, "forks": 2, "lang": "JavaScript", "description": "Real-time chat with Socket.io", "url": "#", "updatedAt": "2024-08-10" }
+    ]
   },
   "codeforces": {
     "rating": 1450,
-    "rank": "Specialist"
-  },
-  "learningPrediction": "Estimated time to become job-ready: 2–4 weeks",
-  "aiInsight": "The candidate demonstrates strong proficiency in Python and React, directly aligning with the core stack. Competitive programming rating of 1450 signals solid algorithmic thinking. Minor gaps in DevOps tooling (Docker, Kubernetes) are bridgeable within weeks given the candidate's learning trajectory."
+    "maxRating": 1512,
+    "rank": "specialist",
+    "maxRank": "specialist",
+    "solvedCount": 63,
+    "totalSubmissions": 142,
+    "acceptanceRate": 44,
+    "topTags": ["dp", "greedy", "graphs", "implementation", "math"],
+    "tagData": [
+      { "tag": "dp", "count": 18 },
+      { "tag": "greedy", "count": 14 },
+      { "tag": "graphs", "count": 11 },
+      { "tag": "implementation", "count": 10 },
+      { "tag": "math", "count": 8 },
+      { "tag": "binary search", "count": 6 },
+      { "tag": "strings", "count": 5 },
+      { "tag": "sorting", "count": 4 }
+    ],
+    "ratingHistory": [
+      { "contestName": "Codeforces Round 850", "rating": 1180, "change": 80, "date": "1/10/2023" },
+      { "contestName": "Codeforces Round 860", "rating": 1250, "change": 70, "date": "2/15/2023" },
+      { "contestName": "Codeforces Round 875", "rating": 1210, "change": -40, "date": "3/20/2023" },
+      { "contestName": "Codeforces Round 890", "rating": 1320, "change": 110, "date": "5/5/2023" },
+      { "contestName": "Codeforces Round 905", "rating": 1380, "change": 60, "date": "7/12/2023" },
+      { "contestName": "Codeforces Round 920", "rating": 1350, "change": -30, "date": "9/1/2023" },
+      { "contestName": "Codeforces Round 935", "rating": 1420, "change": 70, "date": "10/18/2023" },
+      { "contestName": "Codeforces Round 950", "rating": 1450, "change": 30, "date": "12/3/2023" },
+      { "contestName": "Codeforces Round 965", "rating": 1512, "change": 62, "date": "2/14/2024" },
+      { "contestName": "Codeforces Round 980", "rating": 1450, "change": -62, "date": "4/20/2024" }
+    ],
+    "verdicts": { "accepted": 63, "wrongAnswer": 48, "tle": 12 },
+    "contribution": 5
+  }
 }

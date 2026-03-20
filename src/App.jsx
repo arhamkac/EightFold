@@ -44,6 +44,57 @@ function SkillBadge({ skill, type }) {
   );
 }
 
+function BarChart({ items, colors }) {
+  const max = Math.max(...items.map(i => i.value), 1);
+  return (
+    <div className="space-y-2">
+      {items.map(({ label, value }, idx) => (
+        <div key={label} className="flex items-center gap-3">
+          <span className="text-xs text-slate-400 w-24 truncate shrink-0">{label}</span>
+          <div className="flex-1 bg-slate-800 rounded-full h-2">
+            <div className="h-2 rounded-full transition-all duration-700"
+              style={{ width: `${(value / max) * 100}%`, background: colors[idx % colors.length] }} />
+          </div>
+          <span className="text-xs text-slate-400 w-6 text-right">{value}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function DonutChart({ segments }) {
+  const total = segments.reduce((s, i) => s + i.value, 0) || 1;
+  let offset = 0;
+  const r = 40, cx = 50, cy = 50, circ = 2 * Math.PI * r;
+  return (
+    <div className="flex items-center gap-4">
+      <svg viewBox="0 0 100 100" className="w-24 h-24 shrink-0">
+        {segments.map(({ value, color }, i) => {
+          const pct = value / total;
+          const dash = pct * circ;
+          const el = (
+            <circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth="18"
+              strokeDasharray={`${dash} ${circ - dash}`}
+              strokeDashoffset={-offset * circ}
+              style={{ transition: "stroke-dasharray 0.7s" }} />
+          );
+          offset += pct;
+          return el;
+        })}
+      </svg>
+      <div className="space-y-1">
+        {segments.map(({ label, value, color }) => (
+          <div key={label} className="flex items-center gap-2 text-xs">
+            <span className="w-2 h-2 rounded-full shrink-0" style={{ background: color }} />
+            <span className="text-slate-300">{label}</span>
+            <span className="text-slate-500 ml-auto pl-2">{Math.round(value / total * 100)}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ScoreRing({ score }) {
   const circumference = 2 * Math.PI * 45;
   const offset = circumference - (score / 100) * circumference;
@@ -69,7 +120,7 @@ function ScoreRing({ score }) {
   );
 }
 
-const STEPS = ["Fetching GitHub data...", "Fetching Codeforces data...", "Running Gemini AI analysis..."];
+const STEPS = ["Fetching GitHub data...", "Fetching Codeforces data...", "Running analysis..."];
 
 export default function App() {
   const [form, setForm] = useState({ github: "", codeforces: "", jobDesc: "" });
@@ -119,6 +170,11 @@ export default function App() {
   };
 
   const data = results;
+  const skills = data ? {
+    verified: (data.skillSimilarity || []).filter(s => s.status === "verified").map(s => s.skill),
+    learnable: (data.skillSimilarity || []).filter(s => s.status === "learnable").map(s => s.skill),
+    missing: (data.skillSimilarity || []).filter(s => s.status === "missing").map(s => s.skill),
+  } : null;
 
   return (
     <div className="min-h-screen bg-[#0a0f1e] text-white font-sans">
@@ -227,30 +283,52 @@ export default function App() {
                   <div key={type}>
                     <p className="text-xs text-slate-500 mb-2">{label}</p>
                     <div className="flex flex-wrap gap-2">
-                      {data.skills[type].map(s => <SkillBadge key={s} skill={s} type={type} />)}
+                      {skills[type].map(s => <SkillBadge key={s} skill={s} type={type} />)}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
+            {/* Skill Match Chart */}
+            <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl">
+              <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">Skill Match Overview</h3>
+              <BarChart
+                items={[
+                  { label: "Verified", value: skills.verified.length },
+                  { label: "Learnable", value: skills.learnable.length },
+                  { label: "Missing", value: skills.missing.length },
+                ]}
+                colors={["#10b981", "#f59e0b", "#ef4444"]}
+              />
+            </div>
+
             {/* Signals */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-5 shadow-xl">
-                <div className="flex items-center text-slate-400 text-xs mb-2"><GithubIcon />GitHub Signal</div>
-                <p className="text-white font-semibold">{data.github.summary}</p>
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {data.github.languages.map(l => (
-                    <span key={l} className="text-xs bg-slate-700/60 text-slate-300 px-2 py-0.5 rounded-full">{l}</span>
-                  ))}
-                </div>
+                <div className="flex items-center text-slate-400 text-xs mb-3"><GithubIcon />GitHub Languages</div>
+                <DonutChart
+                  segments={(data.github.languageData || data.github.languages.map(l => ({ lang: l, count: 1 }))).map((l, i) => ({                    label: l.lang, value: l.count,
+                    color: ["#6366f1","#06b6d4","#10b981","#f59e0b","#ec4899"][i % 5],
+                  }))}
+                />
+                <p className="text-slate-500 text-xs mt-3">{data.github.repos} public repos</p>
               </div>
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-5 shadow-xl">
-                <div className="flex items-center text-slate-400 text-xs mb-2"><CodeIcon />Codeforces Signal</div>
-                <p className="text-white font-semibold">Rating: {data.codeforces.rating}</p>
-                <span className="text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full mt-2 inline-block">
+                <div className="flex items-center text-slate-400 text-xs mb-3"><CodeIcon />Codeforces Signal</div>
+                <p className="text-white font-semibold text-lg">Rating: {data.codeforces.rating}</p>
+                <span className="text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full mt-1 inline-block">
                   {data.codeforces.rank}
                 </span>
+                {(data.codeforces.tagData || data.codeforces.topTags?.map((t,i) => ({ tag: t, count: 5-i })))?.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-xs text-slate-500 mb-2">Top problem topics</p>
+                    <BarChart
+                      items={(data.codeforces.tagData || data.codeforces.topTags.map((t,i) => ({ tag: t, count: 5-i }))).map(t => ({ label: t.tag, value: t.count }))}
+                      colors={["#06b6d4"]}
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -276,7 +354,7 @@ export default function App() {
                   </svg>
                 </div>
                 <h3 className="text-sm font-semibold text-white">AI Insight</h3>
-                {!useMock && <span className="ml-auto text-xs text-indigo-400/60">powered by Gemini</span>}
+                {!useMock && <span className="ml-auto text-xs text-indigo-400/60">LateLateef</span>}
               </div>
               <p className="text-slate-400 text-sm leading-relaxed">{data.aiInsight}</p>
             </div>
